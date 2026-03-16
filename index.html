@@ -614,45 +614,45 @@ return window.DEFAULT_APP_CONFIG;
             websiteId = rawSearch.replace(/^\?/, '').trim().split('&')[0].trim();
         }
 
-        if (websiteId) {
-            const API_BASE_WOMENDAY = 'https://api.deargift.online/api/womenday';
-            const FETCH_TIMEOUT_MS = 45000; // 45s — mạng 3G/iOS cũ tải chậm, tránh cắt quá sớm
-            window.APP_CONFIG_PROMISE = (async () => {
-                let controller = null;
-                try {
-                    controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-                    const timeoutId = controller ? setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS) : null;
-                    const res = await fetch(API_BASE_WOMENDAY + '/' + encodeURIComponent(websiteId), {
-                        signal: controller ? controller.signal : undefined
-                    });
-                    if (timeoutId) clearTimeout(timeoutId);
-                    const data = await res.json();
-                    if (data && data.success && data.data) {
-                        window.APP_CONFIG = data.data;
-                        return window.APP_CONFIG;
-                    }
+        // if (websiteId) {
+        //     const API_BASE_WOMENDAY = 'https://api.deargift.online/api/womenday';
+        //     const FETCH_TIMEOUT_MS = 45000; // 45s — mạng 3G/iOS cũ tải chậm, tránh cắt quá sớm
+        //     window.APP_CONFIG_PROMISE = (async () => {
+        //         let controller = null;
+        //         try {
+        //             controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        //             const timeoutId = controller ? setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS) : null;
+        //             const res = await fetch(API_BASE_WOMENDAY + '/' + encodeURIComponent(websiteId), {
+        //                 signal: controller ? controller.signal : undefined
+        //             });
+        //             if (timeoutId) clearTimeout(timeoutId);
+        //             const data = await res.json();
+        //             if (data && data.success && data.data) {
+        //                 window.APP_CONFIG = data.data;
+        //                 return window.APP_CONFIG;
+        //             }
                 
                    
-                } catch (err) {
-                    console.error('Lỗi tải config womenday:', err);
-                    if (err.name === 'AbortError') err.isNetworkTimeout = true;
-                    throw err;
-                }
-            })();
-            // iOS cũ / thiết bị yếu: nếu sau 55s vẫn "Đang tải" (vd. Three.js/WebGL treo) -> hiện lỗi để user thử lại
-            setTimeout(function() {
-                var loading = document.getElementById('loading');
-                if (loading && loading.style.display !== 'none' && loading.offsetParent !== null) {
-                    document.body.innerHTML = '<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:2rem;font-family:system-ui;text-align:center;background:linear-gradient(135deg,#1a0a1c,#2d1b2e);box-sizing:border-box;color:#fff;">'
-                        + '<div style="font-size:64px;margin-bottom:16px;">⏱️</div>'
-                        + '<h1 style="font-size:1.6rem;margin-bottom:8px;">Tải quá lâu</h1>'
-                        + '<p style="max-width:480px;opacity:0.85;">Thiết bị hoặc trình duyệt có thể không đủ nhanh. Thử tắt tab khác, kiểm tra mạng, hoặc mở bằng Chrome.</p>'
-                        + '<button type="button" onclick="location.reload()" style="margin-top:1.5rem;padding:12px 24px;font-size:1rem;border-radius:12px;border:none;background:linear-gradient(135deg,#b76e79,#c9959e);color:#fff;cursor:pointer;">Thử lại</button>'
-                        + '</div>';
-                }
-            }, 55000);
-            return;
-        }
+        //         } catch (err) {
+        //             console.error('Lỗi tải config womenday:', err);
+        //             if (err.name === 'AbortError') err.isNetworkTimeout = true;
+        //             throw err;
+        //         }
+        //     })();
+        //     // iOS cũ / thiết bị yếu: nếu sau 55s vẫn "Đang tải" (vd. Three.js/WebGL treo) -> hiện lỗi để user thử lại
+        //     setTimeout(function() {
+        //         var loading = document.getElementById('loading');
+        //         if (loading && loading.style.display !== 'none' && loading.offsetParent !== null) {
+        //             document.body.innerHTML = '<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:2rem;font-family:system-ui;text-align:center;background:linear-gradient(135deg,#1a0a1c,#2d1b2e);box-sizing:border-box;color:#fff;">'
+        //                 + '<div style="font-size:64px;margin-bottom:16px;">⏱️</div>'
+        //                 + '<h1 style="font-size:1.6rem;margin-bottom:8px;">Tải quá lâu</h1>'
+        //                 + '<p style="max-width:480px;opacity:0.85;">Thiết bị hoặc trình duyệt có thể không đủ nhanh. Thử tắt tab khác, kiểm tra mạng, hoặc mở bằng Chrome.</p>'
+        //                 + '<button type="button" onclick="location.reload()" style="margin-top:1.5rem;padding:12px 24px;font-size:1rem;border-radius:12px;border:none;background:linear-gradient(135deg,#b76e79,#c9959e);color:#fff;cursor:pointer;">Thử lại</button>'
+        //                 + '</div>';
+        //         }
+        //     }, 55000);
+        //     return;
+        // }
 
         // Trường hợp không có websiteId: dùng config mặc định
         if (!window.APP_CONFIG) {
